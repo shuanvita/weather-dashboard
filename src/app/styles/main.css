@@ -3,8 +3,43 @@
 
 @theme {
   --font-sans: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --default-line-height: 1.2;
+  --color-main: #0F1113;
+  --color-secondary: #151719;
+  --color-card: #1B1E20;
+  --color-fg: #E6E7E9;
+  --color-fg-muted: #A6A8AB;
+  --color-accent: #6EE7B7;
+  --text-size-display: 48px;
+  --text-size-title: 20px;
+  --text-size-body: 14px;
+  --text-size-caption: 12px;
+}
+
+/* TODO поменять значения для светлой темы */
+@layer base {
+  :root[data-theme="light"] {
+    --color-main: #0F1113;
+    --color-secondary: #151719;
+    --color-card: #1B1E20;
+    --color-fg: #E6E7E9;
+    --color-fg-muted: #A6A8AB;
+    --color-accent: #6EE7B7;
+  }
 }
 
 body {
+  font-size: var(--text-size-body);
+  line-height: var(--default-line-height);
   font-optical-sizing: auto;
+  color: var(--color-fg);
+  background-color: var(--color-main);
+}
+
+.container {
+  @apply max-w-360 mx-auto p-4 xl:p-8;
+}
+
+.weather-panel {
+  @apply bg-secondary rounded-[14px] p-10.25 shadow-md;
 }

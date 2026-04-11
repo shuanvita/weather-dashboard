@@ -1,5 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { WeatherDashboard } from '@/pages/WeatherDashboard'
+</script>
 
 <template>
-  <div>Startkit-Vue</div>
+  <WeatherDashboard />
 </template>
