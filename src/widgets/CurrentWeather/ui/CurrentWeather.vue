@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { SearchCity } from '@/features/SearchCity'
+</script>
 
 <template>
-  <div>Current Weather</div>
+  <div>
+    <SearchCity />
+  </div>
 </template>

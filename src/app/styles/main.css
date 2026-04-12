@@ -10,6 +10,7 @@
   --color-fg: #E6E7E9;
   --color-fg-muted: #A6A8AB;
   --color-accent: #6EE7B7;
+  --color-stroke: rgba(0, 0, 0, 0.08);
   --text-size-display: 48px;
   --text-size-title: 20px;
   --text-size-body: 14px;
