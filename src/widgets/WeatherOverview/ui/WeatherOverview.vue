@@ -1,5 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ThemeSwitcher } from '@/features/ThemeSwitcher'
+</script>
 
 <template>
-  <div>WeatherOverview</div>
+  <div>
+    <div class="flex items-center justify-between">
+      <div>Tabs</div>
+      <ThemeSwitcher />
+    </div>
+  </div>
 </template>
