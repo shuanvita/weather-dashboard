@@ -22,7 +22,7 @@ import {
       <SelectActiveDay />
     </div>
     <h2 class="mb-6 text-size-title font-medium">Today's Overview</h2>
-    <ul class="grid gap-6 xl:grid-cols-3 xl:grid-rows-[1fr_287px]">
+    <ul class="grid gap-6 xl:grid-cols-3">
       <li v-for="item in weatherOverviewMetrics" :key="item.id" :class="{ 'xl:col-span-2': item.type === 'precipitation' }">
         <WeatherMetricCard
           v-if="item.type === 'metric'"

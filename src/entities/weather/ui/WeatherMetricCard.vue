@@ -30,7 +30,7 @@ const descriptionClass = computed(() => {
 </script>
 
 <template>
-  <article class="bg-card border-stroke flex flex-col justify-between gap-6 rounded-[14px] border p-6">
+  <article class="bg-card border-stroke flex flex-col justify-between gap-6 rounded-[14px] border p-6 h-full">
     <p class="text-fg-muted">{{ props.title }}</p>
     <p class="text-size-display leading-none font-semibold">{{ props.value }}</p>
     <div class="flex items-end justify-between">
