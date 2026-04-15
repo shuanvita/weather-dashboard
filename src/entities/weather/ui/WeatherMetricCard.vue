@@ -18,7 +18,7 @@ const props = withDefaults(
 
 const descriptionClass = computed(() => {
   if (props.tone === 'good') {
-    return 'text-accent'
+    return 'text-[#1E7A4C]'
   }
 
   if (props.tone === 'warning') {
@@ -30,11 +30,11 @@ const descriptionClass = computed(() => {
 </script>
 
 <template>
-  <article class="bg-card flex h-[184px] min-w-0 flex-col justify-between rounded-[14px] p-6">
-    <p class="text-fg-muted text-[20px]">{{ props.title }}</p>
-    <p class="text-[56px] font-semibold leading-none">{{ props.value }}</p>
+  <article class="bg-card border-stroke flex flex-col justify-between gap-6 rounded-[14px] border p-6">
+    <p class="text-fg-muted">{{ props.title }}</p>
+    <p class="text-size-display leading-none font-semibold">{{ props.value }}</p>
     <div class="flex items-end justify-between">
-      <p class="text-[34px] font-medium" :class="descriptionClass">{{ props.description }}</p>
+      <p class="text-[16px] font-medium" :class="descriptionClass">{{ props.description }}</p>
       <VSvg class="text-fg-muted" :icon="props.icon" :size="40" />
     </div>
   </article>
