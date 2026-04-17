@@ -11,6 +11,8 @@
   --color-fg: #E6E7E9;
   --color-fg-muted: #A6A8AB;
   --color-accent: #6EE7B7;
+  --color-active-day: #06221A;
+  --color-theme-switcher: #0F1113;
   --color-stroke: rgba(0, 0, 0, 0.08);
   --text-size-display: 48px;
   --text-size-title: 20px;
@@ -18,16 +20,17 @@
   --text-size-caption: 12px;
 }
 
-/* TODO поменять значения для светлой темы */
 @layer base {
   :root[data-theme="light"] {
     --color-main: #F3F5F7;
     --color-secondary: #FFFFFF;
     --color-card: #FFFFFF;
+    --color-card-hover: #E8EDF1;
     --color-fg: #15171A;
     --color-fg-muted: #7A838F;
     --color-accent: #6EE7B7;
     --color-stroke: #DDE3E8;
+    --color-theme-switcher: #E8EDF1;
   }
 }
 

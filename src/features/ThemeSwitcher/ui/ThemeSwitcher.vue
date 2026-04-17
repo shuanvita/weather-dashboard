@@ -24,7 +24,7 @@ const options: ReadonlyArray<{ label: string; value: ThemeMode; icon: string }> 
       :key="option.value"
       type="button"
       class="focus-visible:ring-accent/60 flex h-full cursor-pointer items-center justify-center gap-2 rounded-full px-3.5 transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
-      :class="activeTheme === option.value ? 'bg-main text-fg' : 'text-fg-muted hover:text-fg'"
+      :class="activeTheme === option.value ? 'bg-theme-switcher text-fg' : 'text-fg-muted hover:text-fg'"
       @click="setTheme(option.value)"
       role="radio"
       :aria-label="`${option.label} theme`"
