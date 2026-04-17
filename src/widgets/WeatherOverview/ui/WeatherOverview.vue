@@ -20,7 +20,7 @@ const activeTab = ref<OverviewTab>('week')
     <div class="mb-12">
       <div class="mb-10 flex items-center justify-between">
         <SelectOverviewTab v-model="activeTab" />
-        <ThemeSwitcher />
+        <ThemeSwitcher class="hidden xl:flex" />
       </div>
       <ul v-if="activeTab === 'today'" class="grid gap-6 xl:grid-cols-2">
         <li>

@@ -8,7 +8,7 @@ import { CurrentWeatherMetrics } from '@/widgets/CurrentWeather/ui/CurrentWeathe
 <template>
   <div class="flex h-full flex-col">
     <div>
-      <SearchCity class="mb-14" />
+      <SearchCity class="mb-7 xl:mb-14" />
       <CurrentWeatherMain class="mb-6.25" />
       <CurrentWeatherDetails />
     </div>
