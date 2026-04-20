@@ -47,7 +47,7 @@ const areaPath = computed(() => {
   const lineSegment = points.map(({ x, y }) => `L ${x} ${y}`).join(' ')
   const first = points[0]
   const last = points[points.length - 1]
-
+  if (!first || !last) return ''
   return `M ${first.x} ${first.y} ${lineSegment} L ${last.x} 56 L ${first.x} 56 Z`
 })
 </script>
@@ -84,7 +84,9 @@ const areaPath = computed(() => {
           class="text-fg-muted mt-3 grid text-xs"
           :style="{ gridTemplateColumns: `repeat(${props.points.length}, minmax(0, 1fr))` }"
         >
-          <li v-for="point in props.points" :key="point.label" class="text-center">{{ point.label }}</li>
+          <li v-for="point in props.points" :key="point.label" class="text-center">
+            {{ point.label }}
+          </li>
         </ul>
       </div>
     </div>
