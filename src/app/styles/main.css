@@ -34,6 +34,10 @@
   }
 }
 
+html, body, #app {
+  overflow-x: hidden;
+}
+
 body {
   font-size: var(--text-size-body);
   line-height: var(--default-line-height);
@@ -43,7 +47,7 @@ body {
 }
 
 .container {
-  @apply max-w-360 mx-auto px-5 py-6 xl:p-8;
+  @apply max-w-360 mx-auto overflow-x-hidden px-5 py-6 xl:p-8;
 }
 
 .weather-panel {

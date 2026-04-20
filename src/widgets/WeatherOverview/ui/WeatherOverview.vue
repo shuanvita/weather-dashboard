@@ -17,8 +17,8 @@ const activeTab = ref<OverviewTab>('week')
 
 <template>
   <div>
-    <div class="mb-12">
-      <div class="mb-10 flex items-center justify-between">
+    <div class="mb-10 xl:mb-12">
+      <div class="mb-6 flex items-center justify-between xl:mb-10">
         <SelectOverviewTab v-model="activeTab" />
         <ThemeSwitcher class="hidden xl:flex" />
       </div>
@@ -44,14 +44,19 @@ const activeTab = ref<OverviewTab>('week')
           />
         </li>
       </ul>
-      <SelectActiveDay v-if="activeTab === 'week'" />
+      <div class="overflow-x-auto">
+        <SelectActiveDay v-if="activeTab === 'week'" />
+      </div>
     </div>
-    <h2 class="text-size-title mb-6 font-medium">Today's Overview</h2>
-    <ul class="grid gap-6 xl:grid-cols-3">
+    <h2 class="text-size-title mb-4 xl:mb-6 font-medium">Today's Overview</h2>
+    <ul class="grid grid-cols-2 gap-4 xl:gap-6 xl:grid-cols-3">
       <li
-        v-for="item in weatherOverviewMetrics"
+        v-for="(item, index) in weatherOverviewMetrics"
         :key="item.id"
-        :class="{ 'xl:col-span-2': item.type === 'precipitation' }"
+        :class="[
+          index > 1 && 'col-span-2 xl:col-span-1',
+          item.type === 'precipitation' && 'xl:col-span-2',
+        ]"
       >
         <WeatherMetricCard
           v-if="item.type === 'metric'"

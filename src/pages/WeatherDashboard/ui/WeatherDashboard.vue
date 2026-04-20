@@ -5,9 +5,9 @@ import { WeatherOverview } from '@/widgets/WeatherOverview'
 
 <template>
   <div class="container">
-    <main class="grid gap-6 xl:grid-cols-[360px_1fr] xl:gap-8">
+    <main class="grid gap-16.5 xl:grid-cols-[360px_1fr] xl:gap-8">
       <CurrentWeather class="weather-panel" />
-      <WeatherOverview class="weather-panel" />
+      <WeatherOverview class="weather-panel min-w-0" />
     </main>
   </div>
 </template>

@@ -17,8 +17,8 @@ const activeDayIndex = ref(0)
 </script>
 
 <template>
-  <ul class="grid grid-cols-7 gap-4 overflow-x-auto">
-    <li v-for="(day, index) in forecastDays" :key="day.day">
+  <ul class="flex xl:grid xl:grid-cols-7 gap-3 xl:gap-4">
+    <li class="w-28 shrink-0 xl:w-full" v-for="(day, index) in forecastDays" :key="day.day">
       <ForecastDayCard
         :day="day.day"
         :icon="day.icon"

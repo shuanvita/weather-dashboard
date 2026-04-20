@@ -25,7 +25,7 @@ const selectTab = (tab: OverviewTab) => {
 </script>
 
 <template>
-  <div class="text-size-title flex items-center gap-8 font-medium" role="tablist" aria-label="Overview period">
+  <div class="text-size-title flex items-center gap-6 xl:gap-8 font-medium" role="tablist" aria-label="Overview period">
     <button
       v-for="tab in tabs"
       :key="tab.value"

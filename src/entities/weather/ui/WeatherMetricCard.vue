@@ -34,9 +34,9 @@ const descriptionClass = computed(() => {
 <template>
   <article
     class="bg-card border-stroke flex flex-col justify-between rounded-[14px] border"
-    :class="props.layout === 'inline' ? 'h-35.75 gap-8 px-6 py-5' : 'h-full gap-6 p-6'"
+    :class="props.layout === 'inline' ? 'h-35.75 gap-8 px-6 py-5' : 'h-full gap-4 xl:gap-6 p-5 xl:p-6'"
   >
-    <p class="text-fg-muted">{{ props.title }}</p>
+    <p class="text-fg-muted text-[13px] xl:text-body">{{ props.title }}</p>
     <template v-if="props.layout === 'inline'">
       <div class="flex items-center justify-between gap-4">
         <p class="text-[40px] leading-none font-semibold">{{ props.value }}</p>
@@ -47,10 +47,10 @@ const descriptionClass = computed(() => {
       </div>
     </template>
     <template v-else>
-      <p class="text-size-display leading-none font-semibold">{{ props.value }}</p>
+      <p class="text-[32px] xl:text-size-display leading-none font-semibold">{{ props.value }}</p>
       <div class="flex items-end justify-between">
-        <p class="text-[16px] font-medium" :class="descriptionClass">{{ props.description }}</p>
-        <VSvg class="text-fg-muted" :icon="props.icon" :size="40" />
+        <p class="text-body xl:text-[16px] font-medium" :class="descriptionClass">{{ props.description }}</p>
+        <VSvg class="text-fg-muted w-7 h-7 xl:w-10 xl:h-10" :icon="props.icon" />
       </div>
     </template>
   </article>

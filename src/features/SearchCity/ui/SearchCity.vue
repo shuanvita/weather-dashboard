@@ -8,7 +8,7 @@ const city = ref('')
 <template>
   <form
     role="search"
-    class="bg-card border-stroke flex items-center gap-3 rounded-full border px-5 py-3"
+    class="bg-card border-stroke flex items-center gap-3 rounded-full border px-4 py-2.5 xl:px-5 xl:py-3"
   >
     <button
       class="text-fg-muted hover:text-fg cursor-pointer"

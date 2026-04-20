@@ -17,14 +17,14 @@ const data = [
 
 <template>
   <ul
-    class="bg-card border-stroke w-full grid grid-cols-2 justify-between gap-y-4 rounded-[14px] border p-6"
+    class="xl:bg-card xl:border-stroke grid w-full grid-cols-2 justify-between gap-4 rounded-[14px] xl:gap-0.5 xl:border xl:p-6"
   >
     <li
-      class="flex items-center gap-3"
+      class="bg-card border-stroke flex h-17.75 items-center gap-3 rounded-[10px] border p-4 xl:h-auto xl:border-0 xl:bg-transparent xl:p-0"
       v-for="(item, index) in data"
       :key="`weather-metrics-${index}`"
     >
-      <VSvg :icon="item.icon" :size="32" />
+      <VSvg class="h-6 w-6 xl:h-8 xl:w-8" :icon="item.icon" />
       <div class="flex flex-col gap-0.5">
         <div class="text-[16px] font-semibold">{{ item.value }}</div>
         <div class="text-size-caption text-fg-muted">{{ item.text }}</div>

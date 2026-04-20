@@ -18,8 +18,12 @@ const data = [
 </script>
 
 <template>
-  <ul class="space-y-4">
-    <li class="flex items-center gap-4" v-for="(item, index) in data" :key="`weather-details-${index}`">
+  <ul class="bg-card border-stroke space-y-4 rounded-[14px] border p-5 xl:p-0 xl:bg-transparent xl:border-0">
+    <li
+      class="flex items-center gap-4"
+      v-for="(item, index) in data"
+      :key="`weather-details-${index}`"
+    >
       <VSvg :icon="item.icon" :size="20" />
       <span>{{ item.text }}</span>
     </li>

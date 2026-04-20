@@ -15,7 +15,7 @@ const options: ReadonlyArray<{ label: string; value: ThemeMode; icon: string }> 
 
 <template>
   <div
-    class="bg-card border-stroke flex h-12.5 items-center gap-1 rounded-full border p-1.5"
+    class="bg-card border-stroke flex h-10.5 xl:h-12.5 items-center gap-1 rounded-full border p-1 xl:p-1.5"
     role="radiogroup"
     aria-label="Theme switcher"
   >
@@ -23,7 +23,7 @@ const options: ReadonlyArray<{ label: string; value: ThemeMode; icon: string }> 
       v-for="option in options"
       :key="option.value"
       type="button"
-      class="focus-visible:ring-accent/60 flex h-full cursor-pointer items-center justify-center gap-2 rounded-full px-3.5 transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+      class="focus-visible:ring-accent/60 flex h-full cursor-pointer items-center justify-center gap-2 rounded-full px-3 xl:px-3.5 transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
       :class="activeTheme === option.value ? 'bg-theme-switcher text-fg' : 'text-fg-muted hover:text-fg'"
       @click="setTheme(option.value)"
       role="radio"
