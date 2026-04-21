@@ -1,30 +1,118 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import type { ForecastResponse } from '@/entities/weather'
 
 import { ForecastDayCard } from '@/entities/weather'
 
-const forecastDays = [
-  { day: 'Sun', icon: 'sun-rain', temperature: 32 },
-  { day: 'Mon', icon: 'sun', temperature: 31 },
-  { day: 'Tue', icon: 'cloudy', temperature: 27 },
-  { day: 'Wed', icon: 'rain', temperature: 31 },
-  { day: 'Thu', icon: 'drizzle', temperature: 25 },
-  { day: 'Fri', icon: 'thunderstorm', temperature: 26 },
-  { day: 'Sat', icon: 'sun-rain', temperature: 30 },
-]
+const props = withDefaults(
+  defineProps<{
+    forecast: ForecastResponse | null
+    modelValue?: number
+  }>(),
+  {
+    modelValue: 0,
+  }
+)
 
-const activeDayIndex = ref(0)
+const emit = defineEmits<{
+  (event: 'update:modelValue', value: number): void
+}>()
+
+const iconByWeatherCode = (weatherCode: number) => {
+  if (weatherCode === 0) {
+    return 'sun'
+  }
+
+  if ([1, 2, 3].includes(weatherCode)) {
+    return 'cloudy'
+  }
+
+  if ([95, 96, 99].includes(weatherCode)) {
+    return 'thunderstorm'
+  }
+
+  if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(weatherCode)) {
+    return 'rain'
+  }
+
+  if ([56, 57].includes(weatherCode)) {
+    return 'drizzle'
+  }
+
+  return 'sun-rain'
+}
+
+const dayFormatter = new Intl.DateTimeFormat('en-US', { weekday: 'short' })
+
+const forecastDays = computed(() => {
+  const forecast = props.forecast
+
+  if (!forecast) {
+    return []
+  }
+
+  return forecast.daily.time.map((date, index) => ({
+    day: dayFormatter.format(new Date(date)),
+    icon: iconByWeatherCode(forecast.daily.weather_code[index] ?? 0),
+    temperature: Math.round(forecast.daily.temperature_2m_max[index] ?? 0),
+  }))
+})
+
+const activeDayIndex = ref(props.modelValue)
+const isUserSelectionMade = ref(false)
+
+const isSameDate = (left: Date, right: Date) =>
+  left.getFullYear() === right.getFullYear() &&
+  left.getMonth() === right.getMonth() &&
+  left.getDate() === right.getDate()
+
+const findTodayIndex = (forecast: ForecastResponse) => {
+  const today = new Date()
+  const index = forecast.daily.time.findIndex((date) => isSameDate(new Date(date), today))
+  return index >= 0 ? index : 0
+}
+
+watch(
+  () => props.modelValue,
+  (value) => {
+    activeDayIndex.value = value
+  }
+)
+
+watch(
+  () => props.forecast,
+  (forecast) => {
+    if (!forecast || isUserSelectionMade.value) {
+      return
+    }
+
+    const todayIndex = findTodayIndex(forecast)
+    activeDayIndex.value = todayIndex
+    emit('update:modelValue', todayIndex)
+  },
+  { immediate: true }
+)
+
+const selectDay = (index: number) => {
+  isUserSelectionMade.value = true
+  activeDayIndex.value = index
+  emit('update:modelValue', index)
+}
 </script>
 
 <template>
   <ul class="flex xl:grid xl:grid-cols-7 gap-3 xl:gap-4">
-    <li class="w-28 shrink-0 xl:w-full" v-for="(day, index) in forecastDays" :key="day.day">
+    <li
+      class="w-28 shrink-0 xl:w-full"
+      v-for="(day, index) in forecastDays"
+      :key="`${day.day}-${index}`"
+    >
       <ForecastDayCard
         :day="day.day"
         :icon="day.icon"
         :temperature="day.temperature"
         :is-active="index === activeDayIndex"
-        @click="activeDayIndex = index"
+        @click="selectDay(index)"
       />
     </li>
   </ul>

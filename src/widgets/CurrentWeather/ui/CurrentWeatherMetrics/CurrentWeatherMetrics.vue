@@ -1,18 +1,33 @@
 <script setup lang="ts">
+import { computed, inject } from 'vue'
 import { VSvg } from '@/shared/ui/VSvg'
+import { currentWeatherContextKey } from '@/widgets/CurrentWeather/model/currentWeatherContext'
 
-const data = [
-  {
-    icon: 'humidity',
-    value: '83%',
-    text: 'Humidity',
-  },
-  {
-    icon: 'wind',
-    value: '6km/h',
-    text: 'Wind Speed',
-  },
-]
+const weatherContext = inject(currentWeatherContextKey)
+
+const metrics = computed(() => {
+  const forecast = weatherContext?.forecast.value
+
+  if (!forecast) {
+    return [
+      { icon: 'humidity', value: '--', text: 'Humidity' },
+      { icon: 'wind', value: '--', text: 'Wind Speed' },
+    ]
+  }
+
+  return [
+    {
+      icon: 'humidity',
+      value: `${Math.round(forecast.daily.relative_humidity_2m_mean[0] ?? 0)}%`,
+      text: 'Humidity',
+    },
+    {
+      icon: 'wind',
+      value: `${Math.round(forecast.current.wind_speed_10m)}km/h`,
+      text: 'Wind Speed',
+    },
+  ]
+})
 </script>
 
 <template>
@@ -21,7 +36,7 @@ const data = [
   >
     <li
       class="bg-card border-stroke flex h-17.75 items-center gap-3 rounded-[10px] border p-4 xl:h-auto xl:border-0 xl:bg-transparent xl:p-0"
-      v-for="(item, index) in data"
+      v-for="(item, index) in metrics"
       :key="`weather-metrics-${index}`"
     >
       <VSvg class="h-6 w-6 xl:h-8 xl:w-8" :icon="item.icon" />

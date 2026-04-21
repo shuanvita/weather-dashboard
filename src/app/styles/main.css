@@ -34,10 +34,6 @@
   }
 }
 
-html, body, #app {
-  overflow-x: hidden;
-}
-
 body {
   font-size: var(--text-size-body);
   line-height: var(--default-line-height);
