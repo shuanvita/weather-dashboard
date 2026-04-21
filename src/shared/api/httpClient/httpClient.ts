@@ -1,4 +1,4 @@
-import type { GetOptions, HttpClient, QueryParams } from './httpClient.types'
+import type { GetOptions, HttpClient, QueryParams } from '@/shared/api'
 
 const isJsonContentType = (contentType: string | null) =>
   contentType?.includes('application/json')

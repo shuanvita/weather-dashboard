@@ -1,6 +1,6 @@
 import { httpClient } from '@/shared/api'
 import { weatherConfig } from '@/shared/config'
-import type { Coords } from '../model/forecast.types'
+import type { Coords } from '@/entities/weather'
 
 type GeocodingResult = {
   latitude: number

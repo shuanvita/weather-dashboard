@@ -1,6 +1,6 @@
 import { httpClient } from '@/shared/api'
 import { weatherConfig } from '@/shared/config'
-import type { ForecastResponse } from '../model/forecast.types'
+import type { ForecastResponse } from '@/entities/weather'
 
 export const getWeatherByCoords = (
   latitude: number,
