@@ -5,6 +5,7 @@ export interface ForecastResponse {
     is_day: number
     uv_index: number
     wind_speed_10m: number
+    relative_humidity_2m: number
     precipitation: number
   }
   daily: {

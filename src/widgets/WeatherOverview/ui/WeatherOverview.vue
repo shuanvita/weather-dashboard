@@ -17,10 +17,20 @@ type OverviewTab = 'today' | 'week'
 
 const props = defineProps<{
   forecast: ForecastResponse | null
+  modelValue?: number
+}>()
+
+const emit = defineEmits<{
+  (event: 'update:modelValue', value: number): void
 }>()
 
 const activeTab = ref<OverviewTab>('week')
-const activeDayIndex = ref(0)
+const activeDayIndex = computed({
+  get: () => props.modelValue ?? 0,
+  set: (value: number) => {
+    emit('update:modelValue', value)
+  },
+})
 
 const selectedDayIndex = computed(() => {
   const forecast = props.forecast

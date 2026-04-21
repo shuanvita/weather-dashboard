@@ -5,6 +5,26 @@ import { currentWeatherContextKey } from '@/widgets/CurrentWeather/model/current
 
 const weatherContext = inject(currentWeatherContextKey)
 
+const precipitationConditionByWeatherCode = (weatherCode: number) => {
+  if ([95, 96, 99].includes(weatherCode)) {
+    return { icon: 'thunderstorm', text: 'Thunderstorm' }
+  }
+
+  if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(weatherCode)) {
+    return { icon: 'rain', text: 'Rain' }
+  }
+
+  if ([56, 57].includes(weatherCode)) {
+    return { icon: 'drizzle', text: 'Drizzle' }
+  }
+
+  if ([1, 2, 3].includes(weatherCode)) {
+    return { icon: 'cloudy', text: 'Cloudy' }
+  }
+
+  return { icon: 'sun', text: 'Clear' }
+}
+
 const details = computed(() => {
   const forecast = weatherContext?.forecast.value
 
@@ -16,18 +36,23 @@ const details = computed(() => {
     ]
   }
 
+  const maxIndex = forecast.daily.time.length - 1
+  const dayIndex = Math.min(weatherContext?.selectedDayIndex.value ?? 0, Math.max(maxIndex, 0))
+  const weatherCode = forecast.daily.weather_code[dayIndex] ?? 0
+  const precipitationCondition = precipitationConditionByWeatherCode(weatherCode)
+
   return [
     {
-      icon: 'rain',
-      text: forecast.current.precipitation > 0 ? 'Rain' : 'No Rain',
+      icon: precipitationCondition.icon,
+      text: precipitationCondition.text,
     },
     {
       icon: 'min-temp',
-      text: `Min Temperature - ${Math.round(forecast.daily.temperature_2m_min[0] ?? 0)}°C`,
+      text: `Min Temperature - ${Math.round(forecast.daily.temperature_2m_min[dayIndex] ?? 0)}°C`,
     },
     {
       icon: 'max-temp',
-      text: `Max Temperature - ${Math.round(forecast.daily.temperature_2m_max[0] ?? 0)}°C`,
+      text: `Max Temperature - ${Math.round(forecast.daily.temperature_2m_max[dayIndex] ?? 0)}°C`,
     },
   ]
 })

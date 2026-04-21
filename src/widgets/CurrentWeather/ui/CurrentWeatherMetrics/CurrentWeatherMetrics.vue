@@ -15,15 +15,18 @@ const metrics = computed(() => {
     ]
   }
 
+  const maxIndex = forecast.daily.time.length - 1
+  const dayIndex = Math.min(weatherContext?.selectedDayIndex.value ?? 0, Math.max(maxIndex, 0))
+
   return [
     {
       icon: 'humidity',
-      value: `${Math.round(forecast.daily.relative_humidity_2m_mean[0] ?? 0)}%`,
+      value: `${Math.round(forecast.daily.relative_humidity_2m_mean[dayIndex] ?? 0)}%`,
       text: 'Humidity',
     },
     {
       icon: 'wind',
-      value: `${Math.round(forecast.current.wind_speed_10m)}km/h`,
+      value: `${Math.round(forecast.current.wind_speed_10m ?? 0)} km/h`,
       text: 'Wind Speed',
     },
   ]

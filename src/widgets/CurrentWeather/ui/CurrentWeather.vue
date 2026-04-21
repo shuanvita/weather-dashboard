@@ -10,6 +10,7 @@ import { currentWeatherContextKey } from '@/widgets/CurrentWeather/model/current
 
 const props = defineProps<{
   city: string
+  selectedDayIndex: number
   forecast: ForecastResponse | null
   isLoading: boolean
   error: string | null
@@ -21,6 +22,7 @@ const emit = defineEmits<{
 
 provide(currentWeatherContextKey, {
   city: toRef(props, 'city'),
+  selectedDayIndex: toRef(props, 'selectedDayIndex'),
   forecast: toRef(props, 'forecast'),
   isLoading: toRef(props, 'isLoading'),
   error: toRef(props, 'error'),

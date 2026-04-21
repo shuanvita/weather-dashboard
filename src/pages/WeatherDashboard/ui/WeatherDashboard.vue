@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useForecast } from '@/features/WeatherForecast'
 import { weatherConfig } from '@/shared/config'
 import { CurrentWeather } from '@/widgets/CurrentWeather'
 import { WeatherOverview } from '@/widgets/WeatherOverview'
 
 const { city, forecast, isLoading, error, loadForecastByCity } = useForecast()
+const selectedDayIndex = ref(0)
 
 onMounted(() => {
   void loadForecastByCity(weatherConfig.defaultCity)
@@ -25,9 +26,10 @@ const onSearchCity = (cityName: string) => {
         :forecast="forecast"
         :is-loading="isLoading"
         :error="error"
+        :selected-day-index="selectedDayIndex"
         @search-city="onSearchCity"
       />
-      <WeatherOverview class="weather-panel min-w-0" :forecast="forecast" />
+      <WeatherOverview class="weather-panel min-w-0" :forecast="forecast" v-model="selectedDayIndex" />
     </main>
   </div>
 </template>

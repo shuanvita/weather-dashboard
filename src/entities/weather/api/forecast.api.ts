@@ -16,6 +16,6 @@ export const getWeatherByCoords = (
       hourly: 'precipitation_probability',
       forecast_days: weatherConfig.defaultDays,
       timezone: 'Europe/Moscow',
-      current: 'temperature_2m,weather_code,is_day,uv_index,wind_speed_10m',
+      current: 'temperature_2m,weather_code,is_day,uv_index,wind_speed_10m,relative_humidity_2m',
     },
   })

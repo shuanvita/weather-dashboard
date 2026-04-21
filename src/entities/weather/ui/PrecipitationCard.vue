@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { init, use } from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { GridComponent, TooltipComponent, type GridComponentOption, type TooltipComponentOption } from 'echarts/components'
+import { LineChart, type LineSeriesOption } from 'echarts/charts'
+import type { ECharts, ComposeOption } from 'echarts/core'
+
+use([CanvasRenderer, GridComponent, TooltipComponent, LineChart])
+
+type EChartsOption = ComposeOption<GridComponentOption | TooltipComponentOption | LineSeriesOption>
 
 type PrecipitationPoint = {
   label: string
@@ -11,84 +20,127 @@ const props = defineProps<{
   points: PrecipitationPoint[]
 }>()
 
-const yTicks = [100, 80, 60, 40, 20]
+const chartElementRef = ref<HTMLElement | null>(null)
+let chart: ECharts | null = null
 
-const normalizedPoints = computed(() => {
-  if (props.points.length === 0) {
-    return []
-  }
+const buildOptions = (): EChartsOption => ({
+  grid: {
+    left: 30,
+    right: 8,
+    top: 8,
+    bottom: 28,
+    containLabel: false,
+  },
+  tooltip: {
+    trigger: 'axis',
+    backgroundColor: '#0f141d',
+    borderColor: '#223047',
+    textStyle: {
+      color: '#f3f6fb',
+    },
+    formatter: (params: unknown) => {
+      const firstPoint = Array.isArray(params) ? params[0] : null
 
-  const chartHeight = 56
-  const chartTop = 4
-  const chartBottom = chartHeight - 4
-  const minValue = 20
-  const maxValue = 100
-  const range = maxValue - minValue
+      if (!firstPoint || typeof firstPoint !== 'object') {
+        return ''
+      }
 
-  return props.points.map((point, index) => {
-    const x = props.points.length === 1 ? 50 : (index * 100) / (props.points.length - 1)
-    const clampedValue = Math.min(maxValue, Math.max(minValue, point.value))
-    const progress = (clampedValue - minValue) / range
-    const y = chartBottom - progress * (chartBottom - chartTop)
-
-    return { x, y }
-  })
+      const point = firstPoint as { axisValueLabel?: string; data?: number }
+      return `${point.axisValueLabel ?? ''}: ${point.data ?? 0}%`
+    },
+  },
+  xAxis: {
+    type: 'category',
+    data: props.points.map((point) => point.label),
+    boundaryGap: false,
+    axisTick: { show: false },
+    axisLine: { show: false },
+    axisLabel: {
+      color: '#93A4BD',
+      fontSize: 12,
+    },
+  },
+  yAxis: {
+    type: 'value',
+    min: 0,
+    max: 100,
+    interval: 25,
+    axisLine: { show: false },
+    splitLine: { show: false },
+    axisTick: { show: false },
+    axisLabel: {
+      color: '#93A4BD',
+      fontSize: 12,
+      formatter: '{value}%',
+    },
+  },
+  series: [
+    {
+      type: 'line',
+      data: props.points.map((point) => point.value),
+      smooth: true,
+      showSymbol: false,
+      lineStyle: {
+        color: '#66FFCC',
+        width: 2,
+      },
+      areaStyle: {
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [
+            { offset: 0, color: 'rgba(102, 255, 204, 0.36)' },
+            { offset: 1, color: 'rgba(102, 255, 204, 0)' },
+          ],
+        },
+      },
+    },
+  ],
 })
 
-const linePoints = computed(() => normalizedPoints.value.map(({ x, y }) => `${x},${y}`).join(' '))
-
-const areaPath = computed(() => {
-  const points = normalizedPoints.value
-
-  if (points.length === 0) {
-    return ''
+const renderChart = () => {
+  if (!chart) {
+    return
   }
 
-  const lineSegment = points.map(({ x, y }) => `L ${x} ${y}`).join(' ')
-  const first = points[0]
-  const last = points[points.length - 1]
-  if (!first || !last) return ''
-  return `M ${first.x} ${first.y} ${lineSegment} L ${last.x} 56 L ${first.x} 56 Z`
+  chart.setOption(buildOptions(), true)
+}
+
+const resizeChart = () => {
+  chart?.resize()
+}
+
+onMounted(() => {
+  if (!chartElementRef.value) {
+    return
+  }
+
+  chart = init(chartElementRef.value)
+  renderChart()
+  window.addEventListener('resize', resizeChart)
+})
+
+watch(
+  () => props.points,
+  () => {
+    renderChart()
+  },
+  { deep: true }
+)
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', resizeChart)
+  chart?.dispose()
+  chart = null
 })
 </script>
 
 <template>
   <article class="bg-card border-stroke flex h-full flex-col rounded-[14px] border p-6">
     <p class="text-fg-muted">{{ props.title }}</p>
-
-    <div class="mt-5 flex flex-1 gap-5">
-      <ul class="text-fg-muted flex flex-col justify-between py-1 text-xs">
-        <li v-for="tick in yTicks" :key="tick">{{ tick }}%</li>
-      </ul>
-
-      <div class="flex flex-1 flex-col">
-        <svg viewBox="0 0 100 56" preserveAspectRatio="none" class="h-40 w-full xl:h-44">
-          <defs>
-            <linearGradient id="precipitation-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#66FFCC" stop-opacity="0.36" />
-              <stop offset="100%" stop-color="#66FFCC" stop-opacity="0" />
-            </linearGradient>
-          </defs>
-          <path :d="areaPath" fill="url(#precipitation-fill)" />
-          <polyline
-            :points="linePoints"
-            fill="none"
-            stroke="#66FFCC"
-            stroke-width="0.7"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-
-        <ul
-          class="text-fg-muted mt-3 grid text-xs"
-          :style="{ gridTemplateColumns: `repeat(${props.points.length}, minmax(0, 1fr))` }"
-        >
-          <li v-for="point in props.points" :key="point.label" class="text-center">
-            {{ point.label }}
-          </li>
-        </ul>
-      </div>
-    </div>
+    <div ref="chartElementRef" class="mt-5 h-44 w-full xl:h-48" />
   </article>
 </template>

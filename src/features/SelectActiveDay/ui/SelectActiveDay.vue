@@ -9,9 +9,7 @@ const props = withDefaults(
     forecast: ForecastResponse | null
     modelValue?: number
   }>(),
-  {
-    modelValue: 0,
-  }
+  {}
 )
 
 const emit = defineEmits<{
@@ -58,8 +56,7 @@ const forecastDays = computed(() => {
   }))
 })
 
-const activeDayIndex = ref(props.modelValue)
-const isUserSelectionMade = ref(false)
+const activeDayIndex = ref(props.modelValue ?? 0)
 
 const isSameDate = (left: Date, right: Date) =>
   left.getFullYear() === right.getFullYear() &&
@@ -75,14 +72,14 @@ const findTodayIndex = (forecast: ForecastResponse) => {
 watch(
   () => props.modelValue,
   (value) => {
-    activeDayIndex.value = value
+    activeDayIndex.value = value ?? 0
   }
 )
 
 watch(
   () => props.forecast,
   (forecast) => {
-    if (!forecast || isUserSelectionMade.value) {
+    if (!forecast || props.modelValue !== undefined) {
       return
     }
 
@@ -94,7 +91,6 @@ watch(
 )
 
 const selectDay = (index: number) => {
-  isUserSelectionMade.value = true
   activeDayIndex.value = index
   emit('update:modelValue', index)
 }
