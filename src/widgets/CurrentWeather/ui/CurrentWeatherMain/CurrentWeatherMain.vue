@@ -50,7 +50,7 @@ const currentTemperature = computed(() => {
   }
 
   const dayIndex = selectedDayIndex.value
-  return Math.round(weatherContext.forecast.value.daily.temperature_2m_mean[dayIndex] ?? 0)
+  return Math.round(weatherContext.forecast.value.daily.temperature_2m_max[dayIndex] ?? 0)
 })
 
 const currentDay = computed(() => {

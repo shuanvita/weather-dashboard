@@ -17,6 +17,7 @@ type OverviewTab = 'today' | 'week'
 
 const props = defineProps<{
   forecast: ForecastResponse | null
+  airQualityIndex: number | null
   modelValue?: number
 }>()
 
@@ -93,8 +94,11 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
   hour12: true,
 })
 
+const parseDateTime = (value: string) => new Date(value.replace(' ', 'T'))
+
 const weatherMetrics = computed<WeatherOverviewItem[]>(() => {
   const forecast = props.forecast
+  const currentAqi = props.airQualityIndex
 
   if (!forecast) {
     return weatherOverviewMetrics
@@ -102,18 +106,51 @@ const weatherMetrics = computed<WeatherOverviewItem[]>(() => {
 
   const dayIndex = selectedDayIndex.value
 
+  const aqiValue = currentAqi === null ? null : Math.round(currentAqi)
+
   const uv = Math.round(forecast.daily.uv_index_max[dayIndex] ?? 0)
   const pressure = Math.round(forecast.daily.pressure_msl_mean[dayIndex] ?? 0)
   const sunrise = forecast.daily.sunrise[dayIndex] ?? '--'
   const sunset = forecast.daily.sunset[dayIndex] ?? '--'
-  const precipitationPoints = forecast.hourly.precipitation_probability
-    .slice(0, 7)
-    .map((value, index) => ({
-      label: timeFormatter.format(new Date((forecast.hourly.time[index] ?? '').replace(' ', 'T'))),
-      value,
+  const selectedDay = forecast.daily.time[dayIndex] ?? ''
+  const hourlyPointsForDay = forecast.hourly.time
+    .map((time, index) => ({
+      time,
+      value: forecast.hourly.precipitation_probability[index] ?? 0,
     }))
+    .filter((point) => point.time.startsWith(selectedDay))
+
+  const daytimeHourlyPoints = hourlyPointsForDay.filter((point) => {
+    const hour = parseDateTime(point.time).getHours()
+    return hour >= 6 && hour <= 21
+  })
+
+  const sourcePoints = daytimeHourlyPoints.length > 0 ? daytimeHourlyPoints : hourlyPointsForDay
+
+  const precipitationPoints = sourcePoints.slice(0, 7).map((point) => ({
+    label: timeFormatter.format(parseDateTime(point.time)),
+    value: point.value,
+  }))
 
   return weatherOverviewMetrics.map((item) => {
+    if (item.id === 'air-quality-index' && item.type === 'metric') {
+      if (aqiValue === null) {
+        return {
+          ...item,
+          value: '--',
+          description: 'No data',
+          tone: 'default' as const,
+        }
+      }
+
+      return {
+        ...item,
+        value: aqiValue,
+        description: aqiValue <= 50 ? 'Good' : aqiValue <= 100 ? 'Moderate' : 'Unhealthy',
+        tone: (aqiValue <= 50 ? 'good' : aqiValue <= 100 ? 'default' : 'warning') as WeatherMetricTone,
+      }
+    }
+
     if (item.id === 'uv-index' && item.type === 'metric') {
       return {
         ...item,

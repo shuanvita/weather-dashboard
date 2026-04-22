@@ -5,7 +5,7 @@ import { weatherConfig } from '@/shared/config'
 import { CurrentWeather } from '@/widgets/CurrentWeather'
 import { WeatherOverview } from '@/widgets/WeatherOverview'
 
-const { city, forecast, isLoading, error, loadForecastByCity } = useForecast()
+const { city, forecast, airQualityIndex, isLoading, error, loadForecastByCity } = useForecast()
 const selectedDayIndex = ref(0)
 
 onMounted(() => {
@@ -29,7 +29,12 @@ const onSearchCity = (cityName: string) => {
         :selected-day-index="selectedDayIndex"
         @search-city="onSearchCity"
       />
-      <WeatherOverview class="weather-panel min-w-0" :forecast="forecast" v-model="selectedDayIndex" />
+      <WeatherOverview
+        class="weather-panel min-w-0"
+        :forecast="forecast"
+        :air-quality-index="airQualityIndex"
+        v-model="selectedDayIndex"
+      />
     </main>
   </div>
 </template>
