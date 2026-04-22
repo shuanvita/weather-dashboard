@@ -3,6 +3,18 @@ import { getAirQualityIndexByCoords, getCoordsByCity, getWeatherByCoords } from 
 import type { Coords, ForecastResponse } from '@/entities/weather'
 import { weatherConfig } from '@/shared/config'
 
+const normalizeErrorMessage = (error: unknown) => {
+  if (!(error instanceof Error)) {
+    return 'Unknown error'
+  }
+
+  if (error.message === 'City not found') {
+    return 'City not found. Try entering the city name in English.'
+  }
+
+  return error.message
+}
+
 export const useForecast = () => {
   const city = ref<string>(weatherConfig.defaultCity)
   const forecast = ref<ForecastResponse | null>(null)
@@ -26,8 +38,8 @@ export const useForecast = () => {
 
       return data
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Unknown error'
-      throw err
+      error.value = normalizeErrorMessage(err)
+      return null
     } finally {
       isLoading.value = false
     }
@@ -36,7 +48,17 @@ export const useForecast = () => {
   const loadForecastByCity = async (cityName: string) => {
     const normalizedCity = cityName.trim() || weatherConfig.defaultCity
 
-    const coords = await getCoordsByCity(normalizedCity)
+    error.value = null
+
+    let coords: Coords
+
+    try {
+      coords = await getCoordsByCity(normalizedCity)
+    } catch (err) {
+      error.value = normalizeErrorMessage(err)
+      return null
+    }
+
     city.value = normalizedCity
     return loadForecast(coords)
   }

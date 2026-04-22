@@ -62,7 +62,7 @@ const onSubmit = () => {
         @change="emit('update:modelValue', city)"
       />
     </form>
-    <p v-if="props.error" class="text-xs text-[#F5B544]">
+    <p v-if="props.error" class="text-xs text-[#FF6B6B]">
       {{ props.error }}
     </p>
   </div>
