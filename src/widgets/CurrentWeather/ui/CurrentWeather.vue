@@ -32,8 +32,9 @@ provide(currentWeatherContextKey, {
 <template>
   <div class="flex h-full flex-col">
     <div class="mb-6 xl:mb-0">
-      <div class="mb-7 xl:mb-14 grid grid-cols-2 gap-3 xl:grid-cols-1">
+      <div class="mb-7 grid grid-cols-[minmax(0,1fr)_auto] gap-3 xl:mb-14 xl:grid-cols-1">
         <SearchCity
+          class="min-w-0"
           :model-value="props.city"
           :is-loading="props.isLoading"
           :error="props.error"
